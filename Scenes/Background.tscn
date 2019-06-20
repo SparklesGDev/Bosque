@@ -1,0 +1,166 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Textures/Forest Background.png" type="Texture" id=1]
+[ext_resource path="res://Scenes/Tree.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Textures/Tree Soil.png" type="Texture" id=3]
+
+[node name="Background" type="ParallaxBackground"]
+
+[node name="BG 3" type="ParallaxLayer" parent="."]
+motion_scale = Vector2( 0.1, 0 )
+motion_mirroring = Vector2( 2560, 0 )
+
+[node name="Sprite" type="Sprite" parent="BG 3"]
+position = Vector2( 640, 240 )
+scale = Vector2( 20, 22.5 )
+texture = ExtResource( 1 )
+flip_h = true
+
+[node name="BG 2" type="ParallaxLayer" parent="."]
+modulate = Color( 0.164706, 0.2, 0.176471, 1 )
+position = Vector2( -624, -456 )
+motion_scale = Vector2( 0.4, 0 )
+motion_mirroring = Vector2( 3200, 0 )
+
+[node name="Tree 5" parent="BG 2" instance=ExtResource( 2 )]
+position = Vector2( 640, 712 )
+scale = Vector2( 10, 10 )
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 6" parent="BG 2" instance=ExtResource( 2 )]
+position = Vector2( 1464, 715 )
+scale = Vector2( 10, 10 )
+treeVariant = 0
+
+[node name="Tree 7" parent="BG 2" instance=ExtResource( 2 )]
+position = Vector2( 2224, 735 )
+scale = Vector2( 10, 10 )
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 8" parent="BG 2" instance=ExtResource( 2 )]
+position = Vector2( 2840, 727 )
+scale = Vector2( 10, 10 )
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 1" parent="BG 2" instance=ExtResource( 2 )]
+position = Vector2( 336, 695 )
+scale = Vector2( 10, 10 )
+treeVariant = 0
+
+[node name="Tree 2" parent="BG 2" instance=ExtResource( 2 )]
+position = Vector2( 1120, 695 )
+scale = Vector2( 10, 10 )
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 3" parent="BG 2" instance=ExtResource( 2 )]
+position = Vector2( 1864, 703 )
+scale = Vector2( 10, 10 )
+treeVariant = 0
+
+[node name="Tree 4" parent="BG 2" instance=ExtResource( 2 )]
+position = Vector2( 2656, 703 )
+scale = Vector2( 10, 10 )
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="BG 1" type="ParallaxLayer" parent="."]
+modulate = Color( 0.305882, 0.364706, 0.32549, 1 )
+position = Vector2( -576, -272 )
+motion_scale = Vector2( 0.6, 0 )
+motion_mirroring = Vector2( 2450, 0 )
+
+[node name="Soil" type="Sprite" parent="BG 1"]
+modulate = Color( 0.835294, 0.835294, 0.835294, 1 )
+position = Vector2( 944, 1112 )
+scale = Vector2( 7.75, 8 )
+z_index = -1
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 320, 32 )
+
+[node name="Tree 5" parent="BG 1" instance=ExtResource( 2 )]
+position = Vector2( 512, 608 )
+scale = Vector2( 8, 8 )
+flip_h = true
+treeVariant = 0
+
+[node name="Tree 6" parent="BG 1" instance=ExtResource( 2 )]
+position = Vector2( 1120, 608 )
+scale = Vector2( 8, 8 )
+flip_h = true
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 7" parent="BG 1" instance=ExtResource( 2 )]
+position = Vector2( 1760, 616 )
+scale = Vector2( 8, 8 )
+flip_h = true
+treeVariant = 0
+
+[node name="Tree 8" parent="BG 1" instance=ExtResource( 2 )]
+position = Vector2( 2184, 608 )
+scale = Vector2( 8, 8 )
+flip_h = true
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 1" parent="BG 1" instance=ExtResource( 2 )]
+position = Vector2( 248, 600 )
+scale = Vector2( 8, 8 )
+flip_h = true
+treeVariant = 0
+
+[node name="Tree 2" parent="BG 1" instance=ExtResource( 2 )]
+position = Vector2( 864, 608 )
+scale = Vector2( 8, 8 )
+flip_h = true
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 3" parent="BG 1" instance=ExtResource( 2 )]
+position = Vector2( 1472, 608 )
+scale = Vector2( 8, 8 )
+treeVariant = 0
+
+[node name="Tree 4" parent="BG 1" instance=ExtResource( 2 )]
+position = Vector2( 2024, 616 )
+scale = Vector2( 8, 8 )
+flip_h = true
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="FG" type="ParallaxLayer" parent="."]
+editor/display_folded = true
+modulate = Color( 0.686275, 0.686275, 0.686275, 1 )
+motion_scale = Vector2( 0.8, 0 )
+motion_mirroring = Vector2( 1920, 0 )
+
+[node name="Soil" type="Sprite" parent="FG"]
+modulate = Color( 0.835294, 0.835294, 0.835294, 1 )
+position = Vector2( 376, 816 )
+scale = Vector2( 6, 6 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 320, 32 )
+
+[node name="Tree 1" parent="FG" instance=ExtResource( 2 )]
+treeVariant = 0
+
+[node name="Tree 2" parent="FG" instance=ExtResource( 2 )]
+position = Vector2( 680, 432 )
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 4" parent="FG" instance=ExtResource( 2 )]
+position = Vector2( 1648, 432 )
+region_rect = Rect2( 80, 0, 80, 96 )
+treeVariant = 1
+
+[node name="Tree 3" parent="FG" instance=ExtResource( 2 )]
+position = Vector2( 1152, 432 )
+flip_h = true
+treeVariant = 0

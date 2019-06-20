@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scripts/Enemy.gd" type="Script" id=1]
+[ext_resource path="res://enemy_mat.tres" type="Material" id=2]
+[ext_resource path="res://Textures/icon.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 32, 32 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 2, 30 )
+
+[node name="Enemy" type="KinematicBody2D" groups=[
+"Enemy",
+]]
+scale = Vector2( 0.75, 0.6 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+movementSpeed = 100.0
+
+[node name="Sprite" type="Sprite" parent="."]
+material = ExtResource( 2 )
+texture = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource( 1 )
+
+[node name="Turn Area" type="Area2D" parent="."]
+visible = false
+position = Vector2( 32, 0 )
+input_pickable = false
+gravity_vec = Vector2( 0, 0 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Turn Area"]
+shape = SubResource( 2 )
+[connection signal="body_entered" from="Turn Area" to="." method="_on_Turn_Area_body_entered"]

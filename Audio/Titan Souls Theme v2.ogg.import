@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Titan Souls Theme v2.ogg-cf8dcf7577efdac8797eb116569ae5b9.oggstr"
+
+[deps]
+
+source_file="res://Audio/Titan Souls Theme v2.ogg"
+dest_files=[ "res://.import/Titan Souls Theme v2.ogg-cf8dcf7577efdac8797eb116569ae5b9.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

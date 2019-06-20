@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[ext_resource path="res://stripe_shader.tres" type="Shader" id=1]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/Start_Color = Color( 1, 0.572549, 0.572549, 1 )
+shader_param/End_Color = Color( 0.607843, 0, 0, 1 )
+shader_param/Stripe_Count = 1.0

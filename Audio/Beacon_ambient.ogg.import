@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Beacon_ambient.ogg-04551211fc58e4be0de191e70c24e070.oggstr"
+
+[deps]
+
+source_file="res://Audio/Beacon_ambient.ogg"
+dest_files=[ "res://.import/Beacon_ambient.ogg-04551211fc58e4be0de191e70c24e070.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

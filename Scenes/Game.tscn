@@ -1,0 +1,531 @@
+[gd_scene load_steps=51 format=2]
+
+[ext_resource path="res://Scripts/Scene Loader.gd" type="Script" id=1]
+[ext_resource path="res://Areas/Forest/Forest West.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/Player/Player.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scripts/Interface.gd" type="Script" id=4]
+[ext_resource path="res://Scripts/HUD.gd" type="Script" id=5]
+[ext_resource path="res://default_theme.tres" type="Theme" id=6]
+[ext_resource path="res://Objects/Health Bar.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Inventory/Inventory Screen.gd" type="Script" id=8]
+[ext_resource path="res://Inventory/Inventory Slot.tscn" type="PackedScene" id=9]
+[ext_resource path="res://SWROMNS.TTF" type="DynamicFontData" id=10]
+[ext_resource path="res://Inventory/Inventory Tab.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Inventory/Inventory Limited Tab.tscn" type="PackedScene" id=12]
+[ext_resource path="res://Scripts/Stats Label.gd" type="Script" id=13]
+[ext_resource path="res://Blur.tres" type="Material" id=14]
+[ext_resource path="res://Scenes/Quitting Label.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Scripts/NotificationUI.gd" type="Script" id=16]
+[ext_resource path="res://Scenes/Notification.tscn" type="PackedScene" id=17]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=1]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.74902, 0.980392, 0.411765, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.701961, 0.882353, 0.305882, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends ProgressBar
+
+var player
+
+func _ready():
+	max_value = Entity.get_from_node(get_tree().get_nodes_in_group(\"Player\")[0]).maximum_health
+	$\"Delayed Health Bar\".max_value = max_value
+	
+func on_hurt(attack_data, new_health):
+	var old_health = new_health + attack_data.damage
+	$Tween.interpolate_property($\"Delayed Health Bar\", \"value\", old_health, new_health, 0.4, Tween.TRANS_CIRC, Tween.EASE_IN_OUT, 0.4)
+	$Tween.interpolate_property(self, \"value\", old_health, new_health, 0.2, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+	$Tween.start()
+	$AnimationPlayer.play(\"Shake\")
+
+func on_heal(amount, source, new_health):
+	var old_health = new_health - amount
+	$Tween.interpolate_property($\"Delayed Health Bar\", \"value\", old_health, new_health, 0.4, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+	$Tween.interpolate_property(self, \"value\", old_health, new_health, 0.4, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+	$Tween.start()"
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform float blur_amount;
+
+void fragment() {
+	vec4 old_color = COLOR;
+	vec3 screen = textureLod(SCREEN_TEXTURE, SCREEN_UV, blur_amount).rgb;
+	COLOR.rgb = screen * old_color.rgb;
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_param/blur_amount = 2.5
+
+[sub_resource type="Shader" id=7]
+code = "shader_type canvas_item;
+render_mode unshaded;
+
+uniform float blur_amount;
+
+void fragment() {
+	vec4 old_color = COLOR;
+	vec3 screen = textureLod(SCREEN_TEXTURE, SCREEN_UV, blur_amount).rgb;
+	COLOR.rgb = screen * old_color.rgb;
+}"
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = SubResource( 7 )
+shader_param/blur_amount = 3.5
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0.686275, 0.686275, 0.686275, 1 )
+border_color = Color( 0.423529, 0.423529, 0.423529, 1 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=10]
+content_margin_left = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.168627, 0.168627, 0.168627, 0.635294 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id=11]
+content_margin_left = 6.0
+content_margin_right = 6.0
+bg_color = Color( 0, 0, 0, 0.560784 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxEmpty" id=12]
+
+[sub_resource type="DynamicFont" id=13]
+size = 24
+font_data = ExtResource( 10 )
+
+[sub_resource type="GDScript" id=14]
+script/source = "extends Tabs
+
+func add_slot(slot):
+	$ScrollContainer/GridContainer.add_child(slot)"
+
+[sub_resource type="StyleBoxFlat" id=15]
+bg_color = Color( 0.14902, 0.14902, 0.14902, 1 )
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id=16]
+bg_color = Color( 0.109804, 0.109804, 0.109804, 1 )
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id=17]
+bg_color = Color( 0.176471, 0.176471, 0.176471, 1 )
+shadow_size = 5
+
+[sub_resource type="DynamicFont" id=18]
+size = 27
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 10 )
+
+[sub_resource type="GDScript" id=19]
+script/source = "extends Button
+
+func _pressed(): GameHandler.go_to_main_menu()"
+
+[sub_resource type="DynamicFont" id=20]
+size = 28
+outline_size = 1
+font_data = ExtResource( 10 )
+
+[sub_resource type="DynamicFont" id=21]
+size = 28
+outline_size = 1
+font_data = ExtResource( 10 )
+
+[sub_resource type="DynamicFont" id=22]
+size = 28
+font_data = ExtResource( 10 )
+
+[sub_resource type="StyleBoxFlat" id=23]
+bg_color = Color( 0, 0, 0, 0.403922 )
+
+[sub_resource type="GDScript" id=24]
+script/source = "extends Panel
+
+var is_dead = false
+
+func _ready(): reset()
+
+func reset():
+	visible = false
+	is_dead = false
+
+func _process(delta):
+	if is_dead:
+		$\"Monochrome Filter\".modulate.a += 0.01
+
+func _on_Player_death(player):
+	visible = true
+	is_dead = true"
+
+[sub_resource type="Shader" id=25]
+code = "shader_type canvas_item;
+
+uniform float saturation = 1.0;
+uniform float blur_amount = 1.0;
+
+void fragment() {
+    vec3 color = textureLod(SCREEN_TEXTURE, SCREEN_UV, (1.0 - saturation) * blur_amount).rgb;
+
+    color = mix(vec3(dot(vec3(1.0), color) * 0.3333), color, saturation);
+
+    COLOR.rgb = color;
+}"
+
+[sub_resource type="ShaderMaterial" id=26]
+render_priority = 1
+shader = SubResource( 25 )
+shader_param/saturation = 1.0
+shader_param/blur_amount = 2.0
+
+[sub_resource type="DynamicFont" id=27]
+size = 96
+font_data = ExtResource( 10 )
+
+[sub_resource type="GDScript" id=28]
+script/source = "extends Button
+
+func _on_Restart_Button_pressed():
+	$\"/root/GameHandler\".reload_scene()"
+
+[sub_resource type="StyleBoxFlat" id=29]
+bg_color = Color( 0, 0, 0, 1 )
+border_color = Color( 0, 0, 0, 0 )
+corner_radius_bottom_right = 16
+anti_aliasing = false
+
+[sub_resource type="DynamicFont" id=30]
+size = 32
+font_data = ExtResource( 10 )
+
+[sub_resource type="GDScript" id=31]
+script/source = "extends Label
+
+const quit_timer_delay = 0.15
+const quit_timer_duration = 0.25
+
+var quit_timer = 0
+
+func _process(delta):
+	if Input.is_key_pressed(KEY_ESCAPE):
+		visible_characters = text.length() - round(2.0 * (1 - (quit_timer - quit_timer_delay) / quit_timer_duration))
+		quit_timer += delta
+		if quit_timer >= quit_timer_duration + quit_timer_delay: get_tree().quit()
+	else: quit_timer = 0
+	if not visible and quit_timer > 0:
+		visible = true
+		$Tween.interpolate_method(self, \"change_alpha\", 0, 1, quit_timer_duration / 4, Tween.TRANS_CUBIC, Tween.EASE_IN)
+		$Tween.start()
+	elif quit_timer == 0:
+		visible = false
+		$Tween.stop_all()
+		self_modulate.a = 0
+
+func change_alpha(value):
+	self_modulate.a = value"
+
+[sub_resource type="GDScript" id=32]
+script/source = "extends ColorRect
+
+func on_scene_changed(new_scene):
+	$AnimationPlayer.stop()
+	$AnimationPlayer.play(\"fade_out\")
+	$AnimationPlayer.advance(0)"
+
+[sub_resource type="Animation" id=33]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
+}
+
+[node name="Root" type="Node2D"]
+script = ExtResource( 1 )
+default_scene = ExtResource( 2 )
+
+[node name="Player" parent="." instance=ExtResource( 3 )]
+
+[node name="AnimationTree" parent="Player" index="7"]
+parameters/playback = SubResource( 1 )
+
+[node name="Stats" parent="Player" index="14"]
+stats = {
+"damage": 3.0,
+"defense": 0.0,
+"food_capacity": 2,
+"maximum_health": 20.0,
+"movement_speed": 360.0
+}
+
+[node name="Interface" type="CanvasLayer" parent="."]
+pause_mode = 2
+script = ExtResource( 4 )
+
+[node name="HUD" type="Control" parent="Interface"]
+editor/display_folded = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 5 )
+
+[node name="DebugText" type="Label" parent="Interface/HUD"]
+visible = false
+margin_right = 160.0
+margin_bottom = 32.0
+theme = ExtResource( 6 )
+text = "ApotaFf"
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Health Bar Container" type="Control" parent="Interface/HUD"]
+margin_left = 32.0
+margin_top = 30.0
+margin_right = 248.0
+margin_bottom = 56.0
+
+[node name="Health Bar" parent="Interface/HUD/Health Bar Container" instance=ExtResource( 7 )]
+custom_styles/fg = SubResource( 2 )
+custom_styles/bg = SubResource( 3 )
+value = 100.0
+script = SubResource( 4 )
+
+[node name="Inventory Screen" type="Panel" parent="Interface"]
+material = SubResource( 6 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 8 )
+slot_scene = ExtResource( 9 )
+tabs = [ NodePath("Inventory Panel/TabContainer/Weapons"), NodePath("Inventory Panel/TabContainer/Food") ]
+
+[node name="Inventory Panel" type="Panel" parent="Interface/Inventory Screen"]
+material = SubResource( 8 )
+margin_left = 32.0
+margin_top = 72.0
+margin_right = 688.0
+margin_bottom = 688.0
+custom_styles/panel = SubResource( 9 )
+
+[node name="TabContainer" type="TabContainer" parent="Interface/Inventory Screen/Inventory Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -40.0
+rect_clip_content = true
+theme = ExtResource( 6 )
+custom_styles/tab_fg = SubResource( 10 )
+custom_styles/tab_bg = SubResource( 11 )
+custom_styles/panel = SubResource( 12 )
+custom_fonts/font = SubResource( 13 )
+custom_colors/font_color_bg = Color( 0.454902, 0.454902, 0.454902, 1 )
+custom_colors/font_color_fg = Color( 1, 1, 1, 1 )
+tab_align = 0
+
+[node name="Weapons" parent="Interface/Inventory Screen/Inventory Panel/TabContainer" instance=ExtResource( 11 )]
+visible = false
+script = SubResource( 14 )
+
+[node name="Food" parent="Interface/Inventory Screen/Inventory Panel/TabContainer" groups=[
+"Limited Capacity",
+] instance=ExtResource( 12 )]
+visible = false
+
+[node name="Settings" type="Tabs" parent="Interface/Inventory Screen/Inventory Panel/TabContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 41.0
+rect_clip_content = true
+
+[node name="Menu Button" type="Button" parent="Interface/Inventory Screen/Inventory Panel/TabContainer/Settings"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -192.0
+margin_top = -27.5
+margin_right = 192.0
+margin_bottom = 27.5
+theme = ExtResource( 6 )
+custom_styles/hover = SubResource( 15 )
+custom_styles/pressed = SubResource( 16 )
+custom_styles/focus = SubResource( 15 )
+custom_styles/normal = SubResource( 17 )
+custom_fonts/font = SubResource( 18 )
+text = "Save and Exit to Menu"
+script = SubResource( 19 )
+
+[node name="Stats Panel" type="Panel" parent="Interface/Inventory Screen"]
+material = SubResource( 8 )
+margin_left = 704.0
+margin_top = 72.0
+margin_right = 1248.0
+margin_bottom = 688.0
+custom_styles/panel = SubResource( 9 )
+
+[node name="Stats Label" type="RichTextLabel" parent="Interface/Inventory Screen/Stats Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 12.0
+margin_top = 12.0
+margin_right = -12.0
+margin_bottom = -12.0
+theme = ExtResource( 6 )
+custom_fonts/italics_font = SubResource( 20 )
+custom_fonts/bold_font = SubResource( 21 )
+custom_fonts/normal_font = SubResource( 22 )
+bbcode_enabled = true
+bbcode_text = "[b] - Player Properties -[/b]
+[b]Stat[/b] Value"
+text = " - Player Properties -
+Stat Value"
+script = ExtResource( 13 )
+
+[node name="Health Bar Container" type="Control" parent="Interface/Inventory Screen"]
+editor/display_folded = true
+margin_left = 1032.0
+margin_top = 24.0
+margin_right = 1248.0
+margin_bottom = 50.0
+
+[node name="Health Bar" parent="Interface/Inventory Screen/Health Bar Container" instance=ExtResource( 7 )]
+custom_styles/fg = SubResource( 2 )
+custom_styles/bg = SubResource( 3 )
+script = SubResource( 4 )
+
+[node name="Death Screen" type="Panel" parent="Interface"]
+editor/display_folded = true
+visible = false
+light_mask = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 23 )
+script = SubResource( 24 )
+
+[node name="Monochrome Filter" type="Panel" parent="Interface/Death Screen"]
+modulate = Color( 1, 1, 1, 0 )
+show_behind_parent = true
+light_mask = 0
+material = SubResource( 26 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="CenterContainer" parent="Interface/Death Screen"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="Interface/Death Screen/CenterContainer"]
+margin_left = 400.0
+margin_top = 299.0
+margin_right = 879.0
+margin_bottom = 421.0
+theme = ExtResource( 6 )
+custom_fonts/font = SubResource( 27 )
+custom_colors/font_color = Color( 0.917647, 0.317647, 0.317647, 1 )
+text = "You Died"
+align = 1
+valign = 1
+
+[node name="Restart Button" type="Button" parent="Interface/Death Screen"]
+editor/display_folded = true
+material = ExtResource( 14 )
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -192.0
+margin_top = -240.0
+margin_right = 192.0
+margin_bottom = -175.0
+focus_mode = 1
+enabled_focus_mode = 1
+script = SubResource( 28 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Label" type="Label" parent="Interface/Death Screen/Restart Button"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = ExtResource( 6 )
+text = "Restart"
+align = 1
+valign = 1
+
+[node name="Quitting Label" parent="Interface" instance=ExtResource( 15 )]
+custom_styles/normal = SubResource( 29 )
+custom_fonts/font = SubResource( 30 )
+script = SubResource( 31 )
+
+[node name="Notifications UI" type="VBoxContainer" parent="Interface" groups=[
+"Notifier",
+]]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = -352.0
+margin_right = -8.0
+margin_bottom = -8.0
+mouse_filter = 2
+alignment = 2
+script = ExtResource( 16 )
+notification_scene = ExtResource( 17 )
+
+[node name="Fade Effect" type="ColorRect" parent="Interface" groups=[
+"Fade Effect",
+]]
+editor/display_folded = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 0 )
+script = SubResource( 32 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Interface/Fade Effect"]
+autoplay = "fade_out"
+anims/fade_out = SubResource( 33 )
+[connection signal="on_scene_changed" from="." to="Interface/Fade Effect" method="on_scene_changed"]
+[connection signal="on_death" from="Player/Entity" to="Player" method="on_death"]
+[connection signal="on_death" from="Player/Entity" to="Interface/HUD" method="on_death"]
+[connection signal="on_death" from="Player/Entity" to="Interface/Death Screen" method="_on_Player_death"]
+[connection signal="on_heal" from="Player/Entity" to="Interface/HUD/Health Bar Container/Health Bar" method="on_heal"]
+[connection signal="on_heal" from="Player/Entity" to="Interface/Inventory Screen/Health Bar Container/Health Bar" method="on_heal"]
+[connection signal="on_hurt" from="Player/Entity" to="Player" method="on_hurt"]
+[connection signal="on_hurt" from="Player/Entity" to="Interface/HUD/Health Bar Container/Health Bar" method="on_hurt"]
+[connection signal="on_hurt" from="Player/Entity" to="Interface/Inventory Screen/Health Bar Container/Health Bar" method="on_hurt"]
+[connection signal="on_stat_changed" from="Player/Stats" to="Interface/Inventory Screen/Stats Panel/Stats Label" method="on_stat_updated"]
+[connection signal="on_reset" from="Interface" to="Interface/HUD" method="update_visibility" binds= [ false ]]
+[connection signal="on_reset" from="Interface" to="Interface/Death Screen" method="reset"]
+[connection signal="state_changed" from="Interface/Inventory Screen" to="Player" method="_on_Inventory_Screen_state_changed"]
+[connection signal="state_changed" from="Interface/Inventory Screen" to="Interface/HUD" method="update_visibility"]
+[connection signal="pressed" from="Interface/Death Screen/Restart Button" to="Interface/Death Screen/Restart Button" method="_on_Restart_Button_pressed"]
+
+[editable path="Player"]

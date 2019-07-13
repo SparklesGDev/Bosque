@@ -1,31 +1,36 @@
 extends Area2D
 
-export(NodePath) var cutsceneLight;
-export(NodePath) var cutsceneAudio;
+signal cutscene_state_changed(state)
 
 var player : Player;
-var cutsceneState = -1;
+var cutscene_state = -1;
+var cutscene_played
 
 func _ready():
-	player = $"/root/Root/Player";
+	player = get_tree().get_nodes_in_group("Player")[0]
 
 func _process(delta):
-	if cutsceneState >= 0 and player.input.y == 2: player.input.y = 1;
+	if cutscene_state >= 0 and player.input.y == 2: player.input.y = 1;
+
 func _on_Cutscene_Trigger_body_entered(body):
-	if body.is_in_group("Player"):
-		cutsceneState += 1;
-		match cutsceneState:
+	if body.is_in_group("Player") and not cutscene_played:
+		cutscene_state += 1;
+		match cutscene_state:
 			0:
-				player.isCutsceneRunning = true;
-				get_node(cutsceneLight).get_node("./Animation").play("Fade");
-				get_node(cutsceneAudio).playing = true;
+				player.isCutsceneRunning = true
+				$"../Cutscene Light".get_node("./Animation").play("Fade")
+				$"../Cutscene Music".playing = true
 			1:
 				player.input.y = 2;
 			2:
 				player.input.y = 0;
 				player.isCutsceneRunning = false;
-				player.get_node("./Camera").current = true;
-	pass
+				cutscene_played = true
+		emit_signal("cutscene_state_changed", cutscene_state)
 
-#Hey. Don't forget to add particles when the player jumps and 
-#fix the goddamn music
+var save_key = "cutscene"
+func load_data(data):
+	if not data: return
+	cutscene_played = data.played
+	if cutscene_played: $"../Cutscene Light".visible = false
+func save_data(): return { "played": cutscene_played }

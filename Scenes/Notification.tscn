@@ -1,0 +1,97 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Blur.tres" type="Material" id=1]
+[ext_resource path="res://SWROMNS.TTF" type="DynamicFontData" id=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.305882, 0.305882, 0.305882, 1 )
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_size = 3
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Panel
+
+const ANIMATION_DURATION = 0.5
+var duration
+
+func _ready(): modulate.a = 0
+
+func initialize(text, icon, duration):
+	$HBoxContainer/VBoxContainer/Message.bbcode_text = text
+	if icon: $HBoxContainer/Icon.texture = icon
+	else: $HBoxContainer/Icon.visible = false
+	$Tween.interpolate_method(self, \"_change_opacity\", 0, 1, ANIMATION_DURATION / 2, Tween.TRANS_QUAD, Tween.EASE_OUT, 0.25)
+	$Tween.interpolate_method(self, \"_change_position_x\", -rect_size.x, 0, ANIMATION_DURATION, Tween.TRANS_QUAD, Tween.EASE_OUT)
+	$Tween.interpolate_callback(self, ANIMATION_DURATION + duration, \"go_away\")
+	$Tween.start()
+
+func go_away():
+	$Tween.interpolate_method(self, \"_change_opacity\", 1, 0, ANIMATION_DURATION / 2, Tween.TRANS_SINE, Tween.EASE_IN)
+	$Tween.interpolate_callback(self, 0.5, \"destroy\")
+	$Tween.start()
+
+func destroy(): queue_free()
+
+func _change_opacity(a): modulate.a = a
+func _change_position_x(x): rect_position.x = x"
+
+[sub_resource type="DynamicFont" id=3]
+size = 21
+outline_size = 1
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 21
+font_data = ExtResource( 2 )
+
+[node name="Notification" type="Panel"]
+material = ExtResource( 1 )
+margin_top = 120.0
+margin_right = 216.0
+margin_bottom = 160.0
+rect_min_size = Vector2( 18, 48 )
+size_flags_horizontal = 0
+custom_styles/panel = SubResource( 1 )
+script = SubResource( 2 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 4.0
+margin_right = -8.0
+margin_bottom = -4.0
+custom_constants/separation = 8
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer"]
+margin_right = 40.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 40, 40 )
+mouse_filter = 2
+size_flags_vertical = 0
+expand = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+margin_left = 48.0
+margin_right = 200.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Message" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
+margin_top = 8.0
+margin_right = 152.0
+margin_bottom = 32.0
+rect_min_size = Vector2( 0, 24 )
+size_flags_horizontal = 3
+custom_fonts/bold_font = SubResource( 3 )
+custom_fonts/normal_font = SubResource( 4 )
+bbcode_enabled = true
+bbcode_text = "Apple"
+text = "Apple"
+scroll_active = false
+
+[node name="Tween" type="Tween" parent="."]

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/enter.wav-aea002aea40f6621c96b22ee8914976d.sample"
+
+[deps]
+
+source_file="res://Objects/Cave Entrance/enter.wav"
+dest_files=[ "res://.import/enter.wav-aea002aea40f6621c96b22ee8914976d.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

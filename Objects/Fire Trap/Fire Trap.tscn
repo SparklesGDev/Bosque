@@ -1,0 +1,93 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://Objects/Fire Trap/Fire Trap.gd" type="Script" id=1]
+[ext_resource path="res://Objects/Fire Trap/Fire Trap.png" type="Texture" id=2]
+[ext_resource path="res://Textures/light.jpg" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 4, 4 )
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.679105, 1 )
+colors = PoolColorArray( 0.907227, 0.461635, 0.173649, 1, 0.895508, 0.206387, 0.206387, 1, 0.953125, 0.227112, 0.227112, 0 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.5044 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+emission_shape = 2
+emission_box_extents = Vector3( 0, 2, 0 )
+flag_disable_z = true
+spread = 10.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 45.0
+angular_velocity = 90.0
+angular_velocity_random = 0.5
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+linear_accel = -90.0
+angle = 90.0
+angle_random = 1.0
+scale = 10.0
+scale_random = 0.3
+scale_curve = SubResource( 5 )
+color_ramp = SubResource( 3 )
+
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 4, 12 )
+
+[node name="Fire Trap" type="StaticBody2D"]
+scale = Vector2( 4, 4 )
+script = ExtResource( 1 )
+damage = 1.0
+knockback = 360.0
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource( 1 )
+
+[node name="Activation Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="Deactivation Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Fire" type="Area2D" parent="."]
+monitoring = false
+
+[node name="Light2D" type="Light2D" parent="Fire"]
+position = Vector2( 0, 16 )
+enabled = false
+texture = ExtResource( 3 )
+texture_scale = 0.5
+color = Color( 1, 0.803922, 0.568627, 1 )
+energy = 2.0
+shadow_enabled = true
+
+[node name="Particles2D" type="Particles2D" parent="Fire"]
+position = Vector2( 0, 4 )
+rotation = 1.5708
+emitting = false
+amount = 120
+lifetime = 0.8
+local_coords = false
+process_material = SubResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Fire"]
+position = Vector2( 0, 16 )
+shape = SubResource( 7 )
+[connection signal="timeout" from="Activation Timer" to="." method="_on_Activation_Timer_timeout"]
+[connection signal="timeout" from="Deactivation Timer" to="." method="_on_Deactivation_Timer_timeout"]
+[connection signal="timeout" from="Deactivation Timer" to="." method="_on_Timer_timeout"]
+[connection signal="body_entered" from="Fire" to="." method="_on_Fire_body_entered"]

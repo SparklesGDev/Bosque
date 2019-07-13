@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/GameHandler.gd" type="Script" id=1]
+
+[node name="Game Handler" type="Node2D"]
+pause_mode = 2
+script = ExtResource( 1 )
+game_scene_path = "res://Scenes/Game.tscn"
+menu_scene_path = "res://Main Menu/Main Menu.tscn"

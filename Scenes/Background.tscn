@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Textures/Forest Background.png" type="Texture" id=1]
-[ext_resource path="res://Scenes/Tree.tscn" type="PackedScene" id=2]
-[ext_resource path="res://Textures/Tree Soil.png" type="Texture" id=3]
+[ext_resource path="res://Areas/Forest/Forest Background.png" type="Texture" id=1]
+[ext_resource path="res://Objects/Tree/Tree.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Objects/Tree/Tree Soil.png" type="Texture" id=3]
 
 [node name="Background" type="ParallaxBackground"]
 
@@ -11,13 +11,14 @@ motion_scale = Vector2( 0.1, 0 )
 motion_mirroring = Vector2( 2560, 0 )
 
 [node name="Sprite" type="Sprite" parent="BG 3"]
+modulate = Color( 0.717647, 0.717647, 0.717647, 1 )
 position = Vector2( 640, 240 )
 scale = Vector2( 20, 22.5 )
 texture = ExtResource( 1 )
 flip_h = true
 
 [node name="BG 2" type="ParallaxLayer" parent="."]
-modulate = Color( 0.164706, 0.2, 0.176471, 1 )
+modulate = Color( 0.239216, 0.27451, 0.25098, 1 )
 position = Vector2( -624, -456 )
 motion_scale = Vector2( 0.4, 0 )
 motion_mirroring = Vector2( 3200, 0 )
@@ -68,7 +69,7 @@ region_rect = Rect2( 80, 0, 80, 96 )
 treeVariant = 1
 
 [node name="BG 1" type="ParallaxLayer" parent="."]
-modulate = Color( 0.305882, 0.364706, 0.32549, 1 )
+modulate = Color( 0.415686, 0.458824, 0.427451, 1 )
 position = Vector2( -576, -272 )
 motion_scale = Vector2( 0.6, 0 )
 motion_mirroring = Vector2( 2450, 0 )

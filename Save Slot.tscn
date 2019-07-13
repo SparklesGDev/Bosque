@@ -1,0 +1,177 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://default_theme.tres" type="Theme" id=1]
+[ext_resource path="res://Main Menu/trashbin.png" type="Texture" id=2]
+
+
+[sub_resource type="StyleBoxFlat" id=19]
+bg_color = Color( 0, 0, 0, 0.458824 )
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 0.341176 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=20]
+bg_color = Color( 0, 0, 0, 0.631373 )
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 0.341176 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=21]
+bg_color = Color( 0.34902, 0, 0, 0.219608 )
+border_width_bottom = 2
+border_color = Color( 0.34902, 0, 0, 0.341176 )
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=22]
+bg_color = Color( 0, 0, 0, 0.298039 )
+border_width_bottom = 2
+border_color = Color( 0, 0, 0, 0.341176 )
+anti_aliasing = false
+
+[sub_resource type="GDScript" id=23]
+script/source = "extends RichTextLabel
+
+var original_size
+
+func _ready():
+	original_size = rect_size.y
+
+func _process(delta):
+	var new_line_count = 1
+	for c in bbcode_text:
+		if c == \"\\n\": new_line_count += 1
+	
+	rect_min_size.y = original_size * new_line_count
+	set_process(false)"
+
+[sub_resource type="StyleBoxFlat" id=24]
+bg_color = Color( 0.45098, 0.133333, 0.133333, 0.443137 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id=25]
+bg_color = Color( 0.368627, 0.101961, 0.101961, 0.443137 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id=26]
+bg_color = Color( 0.615686, 0.176471, 0.176471, 0.443137 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="Shader" id=9]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+uniform float radius = 5.0;
+uniform vec4  modulate : hint_color;
+
+void fragment() {
+	vec2 ps = TEXTURE_PIXEL_SIZE;
+
+	vec4 shadow = texture(TEXTURE, UV + vec2(-radius, -radius) * ps);
+
+	shadow += texture(TEXTURE, UV + vec2(-radius, 0.0) * ps);
+	shadow += texture(TEXTURE, UV + vec2(-radius, radius) * ps);
+	shadow += texture(TEXTURE, UV + vec2(0.0, -radius) * ps);
+	shadow += texture(TEXTURE, UV + vec2(0.0, radius) * ps);
+	shadow += texture(TEXTURE, UV + vec2(radius, -radius) * ps);
+	shadow += texture(TEXTURE, UV + vec2(radius, 0.0) * ps);
+	shadow += texture(TEXTURE, UV + vec2(radius, radius) * ps);
+	shadow /= 8.0;
+	shadow *= modulate;
+
+	vec4 col = texture(TEXTURE, UV);
+	COLOR = mix(shadow, col, col.a);
+}"
+
+[sub_resource type="ShaderMaterial" id=10]
+shader = SubResource( 9 )
+shader_param/radius = 2.0
+shader_param/modulate = Color( 0, 0, 0, 1 )
+
+[node name="Save Slot" type="Button"]
+margin_right = 752.0
+margin_bottom = 96.0
+rect_min_size = Vector2( 64, 96 )
+size_flags_horizontal = 3
+custom_styles/hover = SubResource( 19 )
+custom_styles/pressed = SubResource( 20 )
+custom_styles/focus = SubResource( 19 )
+custom_styles/disabled = SubResource( 21 )
+custom_styles/normal = SubResource( 22 )
+
+[node name="Name" type="RichTextLabel" parent="."]
+margin_left = 16.0
+margin_top = 8.0
+margin_right = 280.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 0, 20 )
+rect_clip_content = false
+mouse_filter = 1
+size_flags_horizontal = 3
+theme = ExtResource( 1 )
+bbcode_enabled = true
+bbcode_text = "Item Name"
+text = "Save #{0}"
+scroll_active = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 16.0
+margin_top = -68.0
+margin_right = 400.0
+margin_bottom = -8.0
+alignment = 2
+
+[node name="Description" type="RichTextLabel" parent="VBoxContainer"]
+margin_top = 40.0
+margin_right = 384.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 0, 20 )
+rect_clip_content = false
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 8
+theme = ExtResource( 1 )
+custom_constants/line_separation = -2
+bbcode_enabled = true
+bbcode_text = "Apple Ca
+and Mapel"
+text = "[insert Random data about this save]"
+scroll_active = false
+script = SubResource( 23 )
+
+[node name="Delete Button" type="Button" parent="."]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -80.0
+margin_top = -32.0
+margin_right = -16.0
+margin_bottom = 32.0
+custom_styles/hover = SubResource( 24 )
+custom_styles/pressed = SubResource( 25 )
+custom_styles/focus = SubResource( 24 )
+custom_styles/normal = SubResource( 26 )
+
+[node name="Icon" type="TextureRect" parent="Delete Button"]
+material = SubResource( 10 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -8.0
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource( 2 )
+expand = true

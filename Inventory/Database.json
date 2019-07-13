@@ -1,0 +1,75 @@
+[
+	{
+		"spoon": {
+			"name": "Spoon",
+			"description": "A very spoony spoon indeed",
+			"icon": "spoon.png",
+			"effects":
+			{
+				"damage": 3
+			},
+			"flags": ["equippable"]
+		},
+		"bag": {
+			"name": "Bag",
+			"description": "This bag allows you to hold\nmore food.",
+			"icon": "bag.png",
+			"effects":
+			{
+				"food_capacity": 1
+			},
+			"flags": ["equippable"]
+		},
+		"mega_spoon": {
+			"name": "Speedy Spoon",
+			"description": "Speed: +360",
+			"icon": "spoon.png",
+			"effects":
+			{
+				"movement_speed": 360
+			},
+			"flags": ["equippable"]
+		},
+		"flash_spoon": {
+			"name": "Mega Speed Spoon",
+			"description": "Speed: +INFINITE",
+			"icon": "flash_spoon.png",
+			"effects":
+			{
+				"movement_speed": 720
+			},
+			"flags": ["equippable"]
+		},
+		"glorious_sword": {
+			"name": "Glorious Sword",
+			"description": "Definitely not a totally normal sword",
+			"icon": "sword.png",
+			"effects":
+			{
+				"damage": 9
+			},
+			"flags": ["equippable"]
+		}
+	},
+	{
+		"poisonous_apple": {
+			"name": "Poisonous Apple",
+			"description": "You can see the poison\nin it very well\nBut you're blind :thinking:",
+			"icon": "apple.png",
+			"effects":
+			{
+				"heal": 5
+			},
+			"flags": ["consumable", "full_health"]
+		},
+		"cutscene_skipper": {
+			"name": "The Skipper of Cutscenes",
+			"description": "When used, any cutscenes will\nbe disabled forever.",
+			"icon": "cutscene_skipper.png",
+			"effects": {
+				"DEBUG_CUTSCENE": 1
+			},
+			"flags": ["consumable"]
+		}
+	}
+]

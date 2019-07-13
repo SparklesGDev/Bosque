@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/switch_pressed.wav-d70445c3d4a8dba432d6956a89623ddb.sample"
+
+[deps]
+
+source_file="res://Objects/Shortcut/switch_pressed.wav"
+dest_files=[ "res://.import/switch_pressed.wav-d70445c3d4a8dba432d6956a89623ddb.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

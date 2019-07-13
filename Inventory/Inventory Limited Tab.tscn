@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Inventory/Inventory Tab.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Inventory/Inventory Limited Tab.gd" type="Script" id=2]
+[ext_resource path="res://default_theme.tres" type="Theme" id=3]
+[ext_resource path="res://SWROMNS.TTF" type="DynamicFontData" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+outline_size = 1
+font_data = ExtResource( 4 )
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 0.309804, 0.0509804, 0.0509804, 0.552941 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.270588, 0, 0, 0.866667 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 2
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.219608, 0.0627451, 0.0627451, 0.388235 )
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_size = 2
+anti_aliasing = false
+
+[node name="Inventory Tab" index="0" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="Capacity" type="Label" parent="." index="0"]
+anchor_right = 1.0
+margin_left = 32.0
+margin_right = -32.0
+margin_bottom = 55.0
+theme = ExtResource( 3 )
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_outline_modulate = Color( 0.729412, 0.729412, 0.729412, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 2
+text = "Capacity: 3/5"
+valign = 1
+
+[node name="Clear Button" type="Button" parent="Capacity" index="0"]
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = -64.0
+margin_top = -19.5
+margin_bottom = 19.5
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 4 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/normal = SubResource( 2 )
+text = "Clear"
+
+[node name="ScrollContainer" parent="." index="1"]
+margin_top = 55.0
+[connection signal="pressed" from="Capacity/Clear Button" to="." method="clear_inventory"]

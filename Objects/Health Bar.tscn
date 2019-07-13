@@ -1,0 +1,128 @@
+[gd_scene load_steps=8 format=2]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0.74902, 0.980392, 0.411765, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.701961, 0.882353, 0.305882, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id=2]
+
+[sub_resource type="GDScript" id=3]
+script/source = "extends ProgressBar
+
+var player
+
+func _ready():
+	max_value = Entity.get_from_node(get_tree().get_nodes_in_group(\"Player\")[0]).maximum_health
+	$\"Delayed Health Bar\".max_value = max_value
+
+func on_hurt(attack_data, new_health):
+	print(new_health)
+	var old_health = new_health + attack_data.damage
+	$Tween.interpolate_property($\"Delayed Health Bar\", \"value\", old_health, new_health, 0.4, Tween.TRANS_CIRC, Tween.EASE_IN_OUT, 0.4)
+	$Tween.interpolate_property(self, \"value\", old_health, new_health, 0.2, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+	$Tween.start()
+	$AnimationPlayer.play(\"Shake\")
+
+func on_death(attack_data):
+	visible = false
+
+func on_heal(amount, source, new_health):
+	print(new_health)
+	var old_health = new_health - amount
+	$Tween.interpolate_property($\"Delayed Health Bar\", \"value\", old_health, new_health, 0.4, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+	$Tween.interpolate_property(self, \"value\", old_health, new_health, 0.4, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+	$Tween.start()"
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.619608, 0.262745, 0.262745, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.47451, 0.207843, 0.207843, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id=5]
+bg_color = Color( 0.878431, 0.619608, 0.278431, 1 )
+border_width_top = 2
+border_width_right = 8
+border_width_bottom = 2
+border_color = Color( 0.717647, 0.52549, 0.27451, 1 )
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+[sub_resource type="Animation" id=7]
+resource_name = "Shake"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:rect_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -16, 8 ), Vector2( 0, -8 ), Vector2( 8, 0 ), Vector2( -8, -8 ), Vector2( 0, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 0.478431, 0.478431, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Health Bar" type="ProgressBar"]
+margin_right = 216.0
+margin_bottom = 26.0
+rect_pivot_offset = Vector2( 104, 80 )
+custom_styles/fg = SubResource( 1 )
+custom_styles/bg = SubResource( 2 )
+percent_visible = false
+script = SubResource( 3 )
+
+[node name="Background" type="Panel" parent="."]
+show_behind_parent = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_styles/panel = SubResource( 4 )
+
+[node name="Delayed Health Bar" type="ProgressBar" parent="."]
+show_behind_parent = true
+margin_right = 216.0
+margin_bottom = 26.0
+rect_pivot_offset = Vector2( 104, 80 )
+custom_styles/fg = SubResource( 5 )
+custom_styles/bg = SubResource( 6 )
+percent_visible = false
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 3.0
+anims/Shake = SubResource( 7 )

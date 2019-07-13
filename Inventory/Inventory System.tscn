@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Inventory/Inventory System.gd" type="Script" id=1]
+[ext_resource path="res://Objects/Dropped Item/Dropped Item.tscn" type="PackedScene" id=2]
+
+[node name="Inventory System" type="Node2D" groups=[
+"Savable",
+]]
+script = ExtResource( 1 )
+database_path = "res://Inventory/Database.json"
+dropped_item_scene = ExtResource( 2 )

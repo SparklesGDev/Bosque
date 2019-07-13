@@ -1,0 +1,26 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform vec4 color : hint_color;
+uniform vec4 flash_color : hint_color;
+uniform float flash_amount;
+uniform float invincibility_flash_speed;
+uniform bool invincible;
+
+void fragment() {
+	COLOR = vec4(mix(color.rgb, flash_color.rgb, flash_amount), color.a);
+	if (invincible) {
+		COLOR.a = float(int(TIME * invincibility_flash_speed) % 3);
+	}
+}"
+
+[resource]
+resource_local_to_scene = true
+shader = SubResource( 1 )
+shader_param/color = Color( 0.458824, 0.282353, 0.282353, 1 )
+shader_param/flash_color = Color( 0.980392, 0.45098, 0.129412, 1 )
+shader_param/flash_amount = 0.0
+shader_param/invincibility_flash_speed = 20.0
+shader_param/invincible = false

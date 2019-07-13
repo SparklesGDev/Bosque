@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Objects/Dropped Item/Dropped Item.gd" type="Script" id=1]
+[ext_resource path="res://default_theme.tres" type="Theme" id=2]
+[ext_resource path="res://SWROMNS.TTF" type="DynamicFontData" id=3]
+[ext_resource path="res://Objects/Smart Stream/Smart Stream.tscn" type="PackedScene" id=4]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 16.0
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends Area2D
+
+var interaction_priority = 2
+var interaction_possible = true
+func interact(): get_parent().pick_up()
+func interaction_enabled(): get_parent().interaction_enabled()
+func interaction_disabled(): get_parent().interaction_disabled()"
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 24.0
+
+[sub_resource type="DynamicFont" id=4]
+use_filter = true
+font_data = ExtResource( 3 )
+
+[node name="Dropped Item" type="KinematicBody2D"]
+position = Vector2( -1184, 176 )
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Interaction Area" type="Area2D" parent="." groups=[
+"Interactive",
+]]
+script = SubResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interaction Area"]
+shape = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+
+[node name="Pick-up Label" type="Label" parent="."]
+light_mask = 0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = -80.0
+margin_right = 150.0
+margin_bottom = -50.0
+grow_horizontal = 0
+grow_vertical = 0
+rect_pivot_offset = Vector2( 150, 15 )
+theme = ExtResource( 2 )
+custom_fonts/font = SubResource( 4 )
+text = "Pick %s"
+align = 1
+valign = 1
+
+[node name="Pickup Sound" parent="." instance=ExtResource( 4 )]
+active = false
+[connection signal="body_entered" from="Interaction Area" to="." method="_on_body_entered"]
+[connection signal="body_exited" from="Interaction Area" to="." method="_on_body_exited"]

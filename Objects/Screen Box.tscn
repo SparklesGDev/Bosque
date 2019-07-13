@@ -1,0 +1,54 @@
+[gd_scene load_steps=3 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Area2D
+
+const TRANSITION_DURATION = 0.4
+export(bool) var instant_transition = false
+
+var camera
+var is_first_frame = true
+
+func _process(delta):
+	is_first_frame = false
+	set_process(false)
+
+func on_body_entered(body):
+	if body.is_in_group(\"Player\"):
+		camera = body.get_node(\"Camera\")
+		$Tween.interpolate_method(self, \"update_start_limits\",
+			Vector2(camera.limit_left, camera.limit_top),
+			Vector2($Start.global_position.x, $Start.global_position.y), TRANSITION_DURATION, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+		$Tween.interpolate_method(self, \"update_end_limits\",
+			Vector2(camera.limit_right, camera.limit_bottom),
+			Vector2($End.global_position.x, $End.global_position.y), TRANSITION_DURATION, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+		$Tween.start()
+		if is_first_frame or instant_transition: $Tween.seek($Tween.get_runtime())
+
+func update_start_limits(value):
+	camera.limit_left = value.x
+	camera.limit_top = value.y
+
+func update_end_limits(value):
+	camera.limit_right = value.x
+	camera.limit_bottom = value.y"
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 344, 120 )
+
+[node name="Screen Box" type="Area2D"]
+script = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+modulate = Color( 0.898438, 0.259705, 0.858517, 0.501961 )
+light_mask = 0
+shape = SubResource( 2 )
+
+[node name="Start" type="Position2D" parent="."]
+modulate = Color( 0.333333, 1, 0.333333, 1 )
+
+[node name="End" type="Position2D" parent="."]
+modulate = Color( 1, 0.333333, 0.333333, 1 )
+
+[node name="Tween" type="Tween" parent="."]
+[connection signal="body_entered" from="." to="." method="on_body_entered"]

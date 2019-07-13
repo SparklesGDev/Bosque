@@ -1,0 +1,168 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://Objects/Crawling Enemy/Crawling Enemy.gd" type="Script" id=1]
+[ext_resource path="res://Objects/Crawling Enemy/enemy_mat.tres" type="Material" id=2]
+[ext_resource path="res://Textures/icon.png" type="Texture" id=3]
+[ext_resource path="res://Objects/Smart Stream/Smart Stream.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Objects/Crawling Enemy/hurt.wav" type="AudioStream" id=5]
+[ext_resource path="res://Textures/white.png" type="Texture" id=6]
+[ext_resource path="res://Scripts/Entity.gd" type="Script" id=7]
+[ext_resource path="res://Scripts/Looter.gd" type="Script" id=8]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 32, 32 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 2, 30 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "Hurt"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:flashing")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 1.0, 0.0 ]
+}
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 40, 40 )
+
+[sub_resource type="Curve" id=5]
+min_value = -360.0
+max_value = 360.0
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
+
+[sub_resource type="Gradient" id=7]
+offsets = PoolRealArray( 0, 0.484615, 1 )
+colors = PoolColorArray( 0.458824, 0.282353, 0.282353, 1, 0.396078, 0.247059, 0.247059, 1, 0.329412, 0.203922, 0.203922, 0 )
+
+[sub_resource type="GradientTexture" id=8]
+gradient = SubResource( 7 )
+
+[sub_resource type="Curve" id=9]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0.2349 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=10]
+curve = SubResource( 9 )
+
+[sub_resource type="ParticlesMaterial" id=11]
+render_priority = 1
+emission_shape = 2
+emission_box_extents = Vector3( 32, 32, 1 )
+flag_disable_z = true
+spread = 30.0
+gravity = Vector3( 0, 210, 0 )
+initial_velocity = 120.0
+initial_velocity_random = 0.1
+angular_velocity = 90.0
+angular_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+angle = 180.0
+angle_random = 1.0
+angle_curve = SubResource( 6 )
+scale = 0.2
+scale_random = 0.07
+scale_curve = SubResource( 10 )
+color_ramp = SubResource( 8 )
+hue_variation = 0.02
+hue_variation_random = 0.1
+
+[sub_resource type="GDScript" id=12]
+script/source = "extends Particles2D
+
+var emitted = false
+
+func _process(delta):
+	if emitted and not emitting: get_parent().queue_free()
+	if emitting: emitted = true"
+
+[node name="Crawling Enemy" type="KinematicBody2D" groups=[
+"Enemy",
+]]
+scale = Vector2( 0.75, 0.6 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+movement_speed = 75.0
+knockback = 300.0
+
+[node name="Sprite" type="Sprite" parent="."]
+material = ExtResource( 2 )
+texture = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource( 1 )
+
+[node name="Turn Area" type="Area2D" parent="."]
+visible = false
+position = Vector2( 32, 0 )
+input_pickable = false
+gravity_vec = Vector2( 0, 0 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Turn Area"]
+shape = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 2.5
+anims/Hurt = SubResource( 3 )
+
+[node name="Hurt Area" type="Area2D" parent="."]
+editor/display_folded = true
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurt Area"]
+shape = SubResource( 4 )
+
+[node name="Hurt Sound" parent="." instance=ExtResource( 4 )]
+stream = ExtResource( 5 )
+volume_db = 3.0
+max_distance = 2000.0
+attenuation = 1.0
+active = false
+
+[node name="Death Particles" type="Particles2D" parent="Hurt Sound"]
+rotation = -1.5708
+emitting = false
+amount = 32
+lifetime = 0.5
+one_shot = true
+explosiveness = 0.8
+local_coords = false
+process_material = SubResource( 11 )
+texture = ExtResource( 6 )
+script = SubResource( 12 )
+
+[node name="Entity" type="Node" parent="."]
+script = ExtResource( 7 )
+maximum_health = 15
+invincibilityDuration = 0.4
+
+[node name="Looter" type="Node2D" parent="."]
+script = ExtResource( 8 )
+loot_table = "[
+	[
+		{
+			\"weight\": 10,
+			\"item\": \"poisonous_apple\",
+			\"count\": 1
+		}
+	]
+]"
+[connection signal="body_entered" from="Turn Area" to="." method="_on_Turn_Area_body_entered"]
+[connection signal="body_entered" from="Hurt Area" to="." method="_on_Hurt_Area_body_entered"]
+[connection signal="body_exited" from="Hurt Area" to="." method="_on_Hurt_Area_body_exited"]
+[connection signal="on_death" from="Entity" to="Looter" method="on_death"]
+[connection signal="on_death" from="Entity" to="." method="on_death"]
+[connection signal="on_hurt" from="Entity" to="." method="on_hurt"]

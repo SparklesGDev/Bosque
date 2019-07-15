@@ -48,6 +48,7 @@ tracks/0/keys = {
 
 [node name="Save Point" type="Area2D" groups=[
 "Interactive",
+"Save Point",
 ]]
 scale = Vector2( 3, 3 )
 script = ExtResource( 1 )

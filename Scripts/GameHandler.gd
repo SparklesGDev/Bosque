@@ -24,6 +24,8 @@ func go_to_main_menu():
 	get_tree().paused = false
 	SaveHandler.save_data()
 	get_tree().change_scene(menu_scene_path)
+
 func go_to_game():
 	get_tree().paused = false
 	get_tree().change_scene(game_scene_path)
+	SaveHandler.call_deferred("load_data")

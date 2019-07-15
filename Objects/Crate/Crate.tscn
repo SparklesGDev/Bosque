@@ -124,35 +124,7 @@ invincibilityDuration = 0.2
 
 [node name="Looter" type="Node2D" parent="."]
 script = ExtResource( 6 )
-loot_table = "[
-	[
-		{
-			\"weight\": 1,
-			\"item\": \"poisonous_apple\",
-			\"count\": 2
-		},
-		{
-			\"weight\": 1,
-			\"item\": \"bag\",
-			\"count\": 1
-		},
-		{
-			\"weight\": 1,
-			\"item\": \"glorious_sword\",
-			\"count\": 1
-		},
-		{
-			\"weight\": 2,
-			\"item\": \"mega_spoon\",
-			\"count\": 1
-		},
-		{
-			\"weight\": 2,
-			\"item\": \"flash_spoon\",
-			\"count\": 1
-		}
-	]
-]"
+loot_table = "crate"
 [connection signal="on_death" from="Entity" to="." method="on_death"]
 [connection signal="on_death" from="Entity" to="Looter" method="on_death"]
 [connection signal="on_hurt" from="Entity" to="." method="on_hurt"]

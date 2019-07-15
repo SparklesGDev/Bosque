@@ -1,10 +1,11 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://Objects/Shortcut/Lever.gd" type="Script" id=1]
-[ext_resource path="res://Objects/Shortcut/lever.png" type="Texture" id=2]
+[ext_resource path="res://Objects/Shortcuts/Lever.gd" type="Script" id=1]
+[ext_resource path="res://Objects/Shortcuts/lever.png" type="Texture" id=2]
 [ext_resource path="res://default_theme.tres" type="Theme" id=3]
 [ext_resource path="res://SWROMNS.TTF" type="DynamicFontData" id=4]
-[ext_resource path="res://Objects/Shortcut/switch_pressed.wav" type="AudioStream" id=5]
+[ext_resource path="res://Objects/Shortcuts/switch_pressed.wav" type="AudioStream" id=5]
+
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;

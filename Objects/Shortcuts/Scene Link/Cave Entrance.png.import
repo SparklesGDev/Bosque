@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Cave Entrance.png-0ced6da4f500b6b1c0e70ac9978892f0.stex"
+path="res://.import/Cave Entrance.png-ca6cafae9590d3f4713b8014bf7362ee.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Objects/Cave Entrance/Cave Entrance.png"
-dest_files=[ "res://.import/Cave Entrance.png-0ced6da4f500b6b1c0e70ac9978892f0.stex" ]
+source_file="res://Objects/Shortcuts/Scene Link/Cave Entrance.png"
+dest_files=[ "res://.import/Cave Entrance.png-ca6cafae9590d3f4713b8014bf7362ee.stex" ]
 
 [params]
 

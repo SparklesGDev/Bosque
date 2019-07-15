@@ -1,0 +1,37 @@
+{
+	"crawler":
+	[
+		[
+			{
+				"weight": 2
+			},
+			{
+				"item": "poisonous_apple",
+				"count": 2
+			}
+		]
+	],
+	"crate":
+	[
+		[
+			{
+				"weight": 3
+			},
+			{
+				"item": "poisonous_apple",
+				"weight": 2
+			},
+			{
+				"item": "spoon"
+			}
+		],
+		[
+			{
+				"weight": 5
+			},
+			{
+				"item": "flash_spoon"
+			}
+		]
+	]
+}

@@ -15,7 +15,7 @@ func _process(delta):
 func enter():
 	$"Enter Sound".play()
 	player.global_position = ShortcutSystem.get_other_end(shortcut_name, self).global_position
-# places the player at the other end of this shortcut
+	# places the player at the other end of this shortcut
 
 # Interaction #
 var interaction_priority = 1

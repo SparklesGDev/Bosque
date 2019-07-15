@@ -39,7 +39,7 @@ var attack_damage # set every time you attack from your stats
 var isCutsceneRunning;
 var is_ui_open # whether or not there's any UI opened at the moment
 var was_hurt = false
-var save_point
+var start_position_set = false
 
 onready var entity : Entity = Entity.get_from_node(self)
 
@@ -206,17 +206,23 @@ func update_stat(stat, new_value = null):
 		"movement_speed":
 			movementSpeed = new_value
 
+func set_start_position(position = null):
+	if start_position_set: return
+	if position: global_position = position
+	else: global_position = stored_position
+	start_position_set = true
+	
+# Saving #
 var save_key = "player"
+var stored_position
 
 func load_data(data):
-	if not data: return
-	save_point = data.save_point
-	
-	for point in get_tree().get_nodes_in_group("Save Point"):
-		if point.save_point_name == save_point: global_position = point.global_position
+	if not data: stored_position = Vector2(-1352, 296) # DEFAULT POSITION
+	else: stored_position = Vector2(data.position_x, data.position_y)
 
-func save_data(): return { "save_point": save_point }
+func save_data(): return { "position_x": global_position.x, "position_y": global_position.y }
 
+# Signals #
 func _on_Sword_Area_body_entered(body):
 	if entity.is_hurt or not attacking or body == null or body.is_in_group("Player"): return
 	var body_entity = Entity.get_from_node(body)

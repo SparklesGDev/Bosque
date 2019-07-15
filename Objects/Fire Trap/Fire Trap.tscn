@@ -89,5 +89,4 @@ position = Vector2( 0, 16 )
 shape = SubResource( 7 )
 [connection signal="timeout" from="Activation Timer" to="." method="_on_Activation_Timer_timeout"]
 [connection signal="timeout" from="Deactivation Timer" to="." method="_on_Deactivation_Timer_timeout"]
-[connection signal="timeout" from="Deactivation Timer" to="." method="_on_Timer_timeout"]
 [connection signal="body_entered" from="Fire" to="." method="_on_Fire_body_entered"]

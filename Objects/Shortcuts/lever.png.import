@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/door.png-7772c1364b81377b3c2fd9f49159da5b.stex"
+path="res://.import/lever.png-38c31c6c13f4b0e1de9b0f0fd95ac262.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Objects/Shortcut/door.png"
-dest_files=[ "res://.import/door.png-7772c1364b81377b3c2fd9f49159da5b.stex" ]
+source_file="res://Objects/Shortcuts/lever.png"
+dest_files=[ "res://.import/lever.png-38c31c6c13f4b0e1de9b0f0fd95ac262.stex" ]
 
 [params]
 

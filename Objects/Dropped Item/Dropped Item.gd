@@ -25,8 +25,12 @@ func refresh():
 
 func pick_up():
 	var amount_added = InventorySystem.add_item(item, stack_size)
-	if amount_added == 0 and not item.has_flag(InventoryItem.EQUIPPABLE): NotificationSystem.notify("Inventory Full", preload("res://Textures/error.png"), 2)
-	else:
+	
+	# if nothing was added and isn't equipment (as they've max. 1 amount), then inventory's full
+	if amount_added == 0 and not item.has_flag(InventoryItem.EQUIPPABLE):
+		NotificationSystem.notify("Inventory Full", preload("res://Textures/error.png"), 2)
+		start_interaction_delay()
+	else: # otherwise, at least part was added
 		var added_all = amount_added >= stack_size or item.has_flag(InventoryItem.EQUIPPABLE)
 		var pickup_sound = $"Pickup Sound"
 		if added_all:
@@ -42,14 +46,20 @@ func pick_up():
 		if added_all: queue_free()
 		else:
 			stack_size -= amount_added
+			start_interaction_delay()
 			refresh()
 
+func start_interaction_delay():
+	$"Interaction Area".interaction_possible = false
+	$Timer.start()
+	
 func interact(): pick_up()
 func interaction_enabled(): $"Pick-up Label".visible = true
 func interaction_disabled(): $"Pick-up Label".visible = false
 	
-func _on_body_entered(body):
-	if not body.is_in_group("World"): add_collision_exception_with(body)
-#	if body.is_in_group("Player"): player = body
+func _on_body_entered(body): if not body.is_in_group("World"): add_collision_exception_with(body)
 
 func _on_body_exited(body): pass # if body == player: player = null
+
+func _on_Timer_timeout():
+	$"Interaction Area".interaction_possible = true

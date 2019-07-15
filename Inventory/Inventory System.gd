@@ -3,8 +3,6 @@ extends Node2D
 signal on_item_consumed(item, consumed_properly)
 signal on_item_equipped(item, equipped_properly)
 
-signal on_item_use_attempt(item, used)
-signal on_item_use_failed(item)
 signal on_item_amount_changed(item, old_amount)
 signal on_food_capacity_changed(new_value)
 
@@ -12,7 +10,7 @@ export(String, FILE, "*.json") var database_path
 export(PackedScene) var dropped_item_scene
 
 var food_amount = 0
-var food_capacity
+var food_capacity = 0
 
 var equipment = []
 var database = []
@@ -30,11 +28,11 @@ func generate_database():
 	var parsed_database = parse_json(file.get_as_text())
 	for category in range(parsed_database.size()):
 		for category_id in parsed_database[category]:
-			var item = parse_item(parsed_database[category][category_id], category_id, category)
+			var item = generate_item(parsed_database[category][category_id], category_id, category)
 			database.push_back(item)
 
-# parse_item() creates a new item from the json data of it
-func parse_item(parsed_json, id, category) -> InventoryItem:
+# generate_item() creates a new item from the json data of it
+func generate_item(parsed_json, id, category) -> InventoryItem:
 	var flags = 0
 	if parsed_json.has("flags"):
 		for f in parsed_json.flags:
@@ -94,7 +92,6 @@ func _equip_item(item):
 	
 	var was_equipped = equipment.has(item)
 	var holds_items = item.effects.has("food_capacity") and was_equipped and food_amount > food_capacity - item.effects["food_capacity"]
-	print(item.name + " holds items? %s" % holds_items)
 	# if the item isn't equipped, equip it
 	if not was_equipped or (holds_items and not is_setting_up):
 		var unequipped_other = true
@@ -151,8 +148,6 @@ func calculate_food_amount():
 			food_amount += item.amount
 
 func on_stat_changed(stat, new_value):
-	print(new_value)
-	print('hey, this (%s) changed' % stat)
 	if stat == "food_capacity":
 		food_capacity = new_value
 		emit_signal("on_food_capacity_changed", new_value)

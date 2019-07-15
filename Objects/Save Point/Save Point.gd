@@ -14,7 +14,6 @@ func _process(delta):
 func save():
 	var player = get_tree().get_nodes_in_group("Player")[0]
 	if player:
-		player.save_point = save_point_name
 		player.entity.heal(999, self)
 	$AnimationPlayer.play("Save")
 	NotificationSystem.notify("Game saved")

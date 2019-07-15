@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Inventory/InventoryItem.gd"
 }, {
+"base": "Reference",
+"class": "LootTable",
+"language": "GDScript",
+"path": "res://Scripts/LootTable.gd"
+}, {
 "base": "Node2D",
 "class": "Looter",
 "language": "GDScript",
@@ -38,6 +43,7 @@ _global_script_class_icons={
 "AttackData": "",
 "Entity": "",
 "InventoryItem": "",
+"LootTable": "",
 "Looter": "",
 "Player": ""
 }
@@ -54,6 +60,7 @@ config/icon="res://Textures/icon.png"
 
 GameHandler="*res://Scenes/Game Handler.tscn"
 InventorySystem="*res://Inventory/Inventory System.tscn"
+LootTableLoader="*res://Scenes/LootTableLoader.tscn"
 ShortcutSystem="*res://Scripts/ShortcutSystem.gd"
 NotificationSystem="*res://Scripts/NotificationSystem.gd"
 SaveHandler="*res://Scripts/SaveHandler.gd"

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Scripts/LootTableLoader.gd" type="Script" id=1]
+
+[node name="LootTableLoader" type="Node2D"]
+script = ExtResource( 1 )
+loot_tables_path = "res://Scripts/loot_tables.json"

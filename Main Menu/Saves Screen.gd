@@ -11,6 +11,8 @@ func _ready():
 
 func generate_ui():
 	var save_directory = Directory.new() as Directory
+	if not save_directory.dir_exists("user://saves/"):
+		save_directory.make_dir("user://saves/")
 	save_directory.open("user://saves/")
 	save_directory.list_dir_begin(true)
 	
@@ -42,15 +44,18 @@ func on_save_deleted(save_id):
 	save_directory.open("user://saves/")
 	save_directory.list_dir_begin(true)
 	
-	if last_save_id > 0:
-		for _i in range(save_id): save_directory.get_next()
-		for id in range(save_id, last_save_id):
+	if slots.size() > 0:
+		var file = File.new()
+		for _i in range(save_id):
+			print("b4: %s" % save_directory.get_next())
+		for id in range(save_id, last_save_id - 1):
 			var file_name = save_directory.get_next()
 			if file_name == "": break # file is empty when it's the end of the directory
-			slots[id].initialize(file_name, id)
-			save_directory.rename(file_name, SaveHandler.SAVE_FILE_NAME.format([id]))
-
+			var new_file_name = SaveHandler.SAVE_FILE_NAME.format([id])
+			save_directory.rename(file_name, new_file_name)
+			slots[id].initialize(new_file_name, id)
 	last_save_id -= 1
+	
 	get_node(slot_container).get_child(last_save_id + 1).initialize(last_save_id)
 
 func show_screen():

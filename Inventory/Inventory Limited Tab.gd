@@ -9,7 +9,6 @@ func on_capacity_changed(new_capacity):
 
 func refresh(item_count):
 	self.item_count = item_count
-	print(item_count)
 	$Capacity.text = "Capacity: {0}/{1}".format([item_count, inventory_capacity])
 
 func clear_inventory():

@@ -37,7 +37,7 @@ func process_movement(delta):
 	velocity = move_and_slide(Vector2(move_x, moveY));
 
 func process_damage(delta):
-	if entity.is_hurt: move_and_slide(entity.lastAttack.direction * entity.hurtTime / entity.hurtDuration);
+	if entity.is_hurt: move_and_slide(entity.last_attack.direction * entity.hurtTime / entity.hurtDuration);
 
 func process_attacks(delta):
 	if player_inside_area == null: return

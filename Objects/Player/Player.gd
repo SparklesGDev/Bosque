@@ -81,12 +81,16 @@ func process_input():
 	if is_ui_open: return
 	if Input.is_action_pressed("ui_left"): input.x += -1
 	if Input.is_action_pressed("ui_right"): input.x += 1;
-	if Input.is_action_just_pressed("ui_up"): input.y = 2;
-	elif Input.is_action_pressed("ui_up"): input.y = 1;
+	
+	if Input.is_action_pressed("ui_up"):
+		if Input.is_action_just_pressed("ui_up"): input.y += 1;
+		input.y += 1;
+	elif Input.is_action_just_pressed("ui_down"): input.y -= 1;
+	
 	if Input.is_action_just_pressed("attack") and not entity.is_hurt: attack_requested = true
 
 func process_damage(delta):
-	if entity.is_hurt and (entity.alive or not onGround): move_and_slide(entity.lastAttack.direction * entity.hurtTime / entity.hurtDuration);
+	if entity.is_hurt and (entity.alive or not onGround): move_and_slide(entity.last_attack.direction * entity.hurtTime / entity.hurtDuration);
 
 func process_attacks(delta):
 	if attack_requested:
@@ -95,7 +99,7 @@ func process_attacks(delta):
 
 func attack():
 	attacking = true
-	$"Attack Sound".pitch_scale = rand_range(0.85, 1.05)
+	#$"Attack Sound".pitch_scale = rand_range(0.85, 1.05)
 	$"Attack Sound".play()
 
 func process_horizontal():
@@ -116,13 +120,15 @@ func process_vertical():
 	else:
 		var wasJumping = jumping # used to determine if smallJumpTriggered should be set to false
 		if onGround and input.y == 2: jump(); # jumps if on ground
+		elif onGround and input.y == -1 and _check_if_platform(): position.y += 8
 		else: movement.y = gravity + velocity.y; # otherwise moveY will be gravity
 		if wasJumping:
 			if input.y < 1: smallJumpTriggered = true;
 			if smallJumpTriggered: movement.y += smallJumpFactor;
 			if velocity.y > 0: movement.y += fastFallFactor;
 		else: smallJumpTriggered = false;
-	
+
+func _check_if_platform(): return $PlatformRaycast.is_colliding() and $PlatformRaycast.get_collider().is_in_group("Platform")
 func jump():
 	movement.y = -jumpHeight;
 	jumping = true;

@@ -10,7 +10,7 @@ var attackers = Dictionary();
 var health; # your current amount of hit points
 var hurtTime = 0; # how long you'll still be hurt 
 var is_hurt; # true when you get hit; when it's the case, you cannot move
-var lastAttack # the last attack this entity suffered
+var last_attack # the last attack this entity suffered
 var alive = true # if this entity has not died yet
 var invincible # makes this entity invincible against all attacks
 
@@ -28,7 +28,7 @@ func initialize():
 	health = maximum_health;
 	attackers = Dictionary()
 	is_hurt = false
-	lastAttack = null
+	last_attack = null
 	invincible = false
 
 func _process(delta):
@@ -44,7 +44,7 @@ func _process(delta):
 func hurt(attack : AttackData) -> bool:
 	if invincible or attackers.has(attack.source): return false
 	attackers[attack.source] = invincibilityDuration; # adds this source to the list of recent attackers
-	lastAttack = attack
+	last_attack = attack
 	health -= attack.damage
 	hurtTime = hurtDuration; # keeps you from doing anything for some time
 	if health <= 0 and alive: die()
@@ -59,4 +59,4 @@ func heal(amount, source):
 
 func die():
 	alive = false
-	emit_signal("on_death", lastAttack)
+	emit_signal("on_death", last_attack)

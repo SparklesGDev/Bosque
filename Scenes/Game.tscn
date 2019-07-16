@@ -254,7 +254,7 @@ func on_scene_changed(new_scene):
 	$AnimationPlayer.play(\"fade_out\")
 	$AnimationPlayer.advance(0)
 	$Tween.interpolate_method(self, \"update_volume\", -60, 0, 1, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	$Tween.start()
+	#$Tween.start()
 
 func update_volume(value):
 	AudioServer.set_bus_volume_db(0, value)"
@@ -288,7 +288,7 @@ scene_list = {
 [node name="AnimationTree" parent="Player" index="7"]
 parameters/playback = SubResource( 1 )
 
-[node name="Stats" parent="Player" index="14"]
+[node name="Stats" parent="Player" index="15"]
 stats = {
 "damage": 3.0,
 "defense": 0.0,
@@ -536,8 +536,8 @@ anims/fade_out = SubResource( 33 )
 [connection signal="on_stat_changed" from="Player/Stats" to="Interface/Inventory Screen/Stats Panel/Stats Label" method="on_stat_updated"]
 [connection signal="on_reset" from="Interface" to="Interface/Death Screen" method="reset"]
 [connection signal="on_reset" from="Interface" to="Interface/HUD" method="update_visibility" binds= [ false ]]
-[connection signal="state_changed" from="Interface/Inventory Screen" to="Interface/HUD" method="update_visibility"]
 [connection signal="state_changed" from="Interface/Inventory Screen" to="Player" method="_on_Inventory_Screen_state_changed"]
+[connection signal="state_changed" from="Interface/Inventory Screen" to="Interface/HUD" method="update_visibility"]
 [connection signal="pressed" from="Interface/Death Screen/Restart Button" to="Interface/Death Screen/Restart Button" method="_on_Restart_Button_pressed"]
 
 [editable path="Player"]

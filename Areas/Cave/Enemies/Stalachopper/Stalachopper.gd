@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-const GRAVITY = 20
+const GRAVITY = 900
 
 onready var states_map = {
 	"idle_start": $States/IdleStatic,
@@ -9,21 +9,20 @@ onready var states_map = {
 	"jump": $States/Jump
 }
 
-export(float) var undetection_distance = 80
-
 var current_state
 var flashing = 0
 
 var entity
+
 var target
+var is_upside_down = false
 
 func _ready():
 	entity = Entity.get_from_node(self)
 	change_state("idle_start")
 
-func _process(delta):
+func _physics_process(delta):
 	if entity.is_hurt: move_and_slide(entity.last_attack.direction * entity.hurtTime / entity.hurtDuration)
-	if target and target.global_position.distance_to(global_position) > undetection_distance: target = null
 	
 	var new_state = current_state.update(delta)
 	if new_state: change_state(new_state)
@@ -53,5 +52,5 @@ func on_death(attack_data):
 	hurt_sound.get_node("Death Particles").emitting = true
 	queue_free()
 
-func on_body_detected(body):
-	if body.is_in_group("Player"): target = body
+func on_body_detected(body): if body.is_in_group("Player"): target = body
+func on_body_lost(body): if target == body: target = null

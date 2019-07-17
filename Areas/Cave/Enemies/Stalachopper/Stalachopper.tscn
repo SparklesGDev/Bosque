@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Areas/Cave/Enemies/Stalachopper/Stalachopper.gd" type="Script" id=1]
 [ext_resource path="res://Areas/Cave/Enemies/Stalachopper/Stalachopper pixel.png" type="Texture" id=2]
@@ -28,7 +28,7 @@ shader_param/flash_color = Color( 0.478431, 0.137255, 0.137255, 1 )
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 8, 16 )
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=4]
 resource_name = "Hurt"
 tracks/0/type = "value"
 tracks/0/path = NodePath(".:flashing")
@@ -43,28 +43,28 @@ tracks/0/keys = {
 "values": [ 0.0, 1.0, 0.0 ]
 }
 
-[sub_resource type="Curve" id=8]
+[sub_resource type="Curve" id=5]
 min_value = -360.0
 max_value = 360.0
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=9]
-curve = SubResource( 8 )
+[sub_resource type="CurveTexture" id=6]
+curve = SubResource( 5 )
 
-[sub_resource type="Gradient" id=10]
+[sub_resource type="Gradient" id=7]
 offsets = PoolRealArray( 0, 0.484615, 1 )
 colors = PoolColorArray( 0.453125, 0.453125, 0.453125, 1, 0.308594, 0.308594, 0.308594, 1, 0, 0, 0, 1 )
 
-[sub_resource type="GradientTexture" id=11]
-gradient = SubResource( 10 )
+[sub_resource type="GradientTexture" id=8]
+gradient = SubResource( 7 )
 
-[sub_resource type="Curve" id=12]
+[sub_resource type="Curve" id=9]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
 
-[sub_resource type="CurveTexture" id=13]
-curve = SubResource( 12 )
+[sub_resource type="CurveTexture" id=10]
+curve = SubResource( 9 )
 
-[sub_resource type="ParticlesMaterial" id=14]
+[sub_resource type="ParticlesMaterial" id=11]
 render_priority = 1
 emission_shape = 2
 emission_box_extents = Vector3( 21, 12, 1 )
@@ -79,13 +79,13 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 angle = 180.0
 angle_random = 1.0
-angle_curve = SubResource( 9 )
+angle_curve = SubResource( 6 )
 scale = 0.15
 scale_random = 0.07
-scale_curve = SubResource( 13 )
-color_ramp = SubResource( 11 )
+scale_curve = SubResource( 10 )
+color_ramp = SubResource( 8 )
 
-[sub_resource type="GDScript" id=15]
+[sub_resource type="GDScript" id=12]
 script/source = "extends Particles2D
 
 var emitted = false
@@ -94,7 +94,7 @@ func _process(delta):
 	if emitted and not emitting: get_parent().queue_free()
 	if emitting: emitted = true"
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=13]
 script/source = "extends StateMachineState
 
 func update(delta):
@@ -102,7 +102,7 @@ func update(delta):
 	if body and body.is_in_group(\"Player\"): return \"fall\"
 	return"
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=14]
 script/source = "extends StateMachineState
 
 var velocity = Vector2()
@@ -113,14 +113,14 @@ func start(host):
 	host.get_node(\"Sprite\").frame = 1
 	
 func update(delta):
-	velocity = host.move_and_slide(velocity + Vector2.DOWN * host.GRAVITY)
+	velocity = host.move_and_slide(velocity + Vector2.DOWN * host.GRAVITY * delta)
 	for collision_id in host.get_slide_count():
 		var collider = host.get_slide_collision(collision_id).collider
 		if collider and collider.is_in_group(\"World\"):
 			return \"idle\"
 	return"
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=15]
 script/source = "extends StateMachineState
 
 export(float) var animation_speed = 1
@@ -135,9 +135,14 @@ func start(host):
 	wants_to_jump = false
 	time = 0
 	$JumpTimer.start()
-
+	
+	host.rotation_degrees = 180 if host.is_upside_down else 0
+	host.move_and_slide(Vector2.UP)
+	
 func update(delta):
-	sprite.frame = 2 + floor(fmod(time * 2, 2))
+	if not host.is_upside_down: sprite.frame = 2 + floor(fmod(time * 2, 2))
+	else: sprite.frame = 6 - floor(fmod(time * 2, 2))
+		
 	time += delta * animation_speed
 	if wants_to_jump: return \"jump\"
 
@@ -147,48 +152,80 @@ func _on_Timer_timeout():
 [sub_resource type="GDScript" id=16]
 script/source = "extends StateMachineState
 
-export(float) var jump_force = 100
+export(float) var jump_height = 100
 export(float) var movement_speed = 30
+export(float) var knockback = 200
 
 var velocity
 var direction
 
+var jump_duration
+var jump_force
+var time
+
+var sprite
+
 func start(host):
 	.start(host)
-	host.modulate = Color.tomato if host.target else Color.white
-	velocity = host.move_and_slide(Vector2.UP * jump_force)
+	time = 0
+	sprite = host.get_node(\"Sprite\")
+	
+	if jump_force == null:
+		jump_force = sqrt(2 * host.GRAVITY * jump_height)
+		jump_duration = 2 * sqrt(2 * host.GRAVITY * jump_height) / host.GRAVITY
+		print(\"jump force: {0}; jump time: {1}\".format([jump_force, jump_duration]))
+	
+	host.modulate = Color(0.9, 0.7, 0.7) if host.target else Color.white
+	
 	if host.target: direction = sign(host.target.global_position.x - host.global_position.x)
 	else: direction = sign(round(rand_range(-2, 2)))
+	
+	velocity = host.move_and_slide(Vector2(direction * movement_speed, -jump_force))
 
 func update(delta):
-	velocity.x = direction * movement_speed
-	velocity = host.move_and_slide(velocity + Vector2.DOWN * host.GRAVITY)
+	velocity = host.move_and_slide(velocity + Vector2(0, host.GRAVITY) * delta, Vector2.UP)
+	
+	# fix rotation cap
+	host.rotation_degrees += 180 * delta / jump_duration
+	
+	time = min(time + delta, jump_duration)
+	
+	if time / jump_duration > 0.5:
+		if not host.is_upside_down: sprite.frame = 4 + round(time * 2 - 1)
+		else: sprite.frame = 4 - round(time * 2 - 1)
+	#if host.is_on_floor(): return \"idle\"
 	
 	for collision_id in host.get_slide_count():
-		var collider = host.get_slide_collision(collision_id).collider
-		if collider and collider.is_in_group(\"World\"):
-			return \"idle\""
+		var collision = host.get_slide_collision(collision_id)
+		if not collision: continue
+		if collision.collider.is_in_group(\"Player\"): Entity.get_from_node(collision.collider).hurt(AttackData.new(1, self, Vector2.RIGHT * direction * knockback))
+		elif collision.collider.is_in_group(\"World\") and is_on_ground(collision):
+			host.is_upside_down = not host.is_upside_down
+			return \"idle\"
+
+func is_on_ground(collision): return collision.normal.y < -0.9"
 
 [sub_resource type="CircleShape2D" id=17]
-radius = 72.0
+radius = 108.0
+
+[sub_resource type="CircleShape2D" id=18]
+radius = 240.0
 
 [node name="Stalachopper" type="KinematicBody2D"]
 scale = Vector2( 1.5, 1.5 )
 script = ExtResource( 1 )
-undetection_distance = 120.0
 
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 2 )
 texture = ExtResource( 2 )
-vframes = 4
+vframes = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource( 3 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 playback_speed = 2.5
-anims/Hurt = SubResource( 7 )
+anims/Hurt = SubResource( 4 )
 
 [node name="Hurt Sound" parent="." instance=ExtResource( 3 )]
 editor/display_folded = true
@@ -207,26 +244,26 @@ lifetime = 0.5
 one_shot = true
 explosiveness = 0.9
 local_coords = false
-process_material = SubResource( 14 )
+process_material = SubResource( 11 )
 texture = ExtResource( 5 )
-script = SubResource( 15 )
+script = SubResource( 12 )
 
 [node name="States" type="Node" parent="."]
 
 [node name="IdleStatic" type="Node" parent="States"]
-script = SubResource( 4 )
+script = SubResource( 13 )
 
 [node name="Fall" type="Node" parent="States"]
-script = SubResource( 5 )
+script = SubResource( 14 )
 
 [node name="Idle" type="Node" parent="States"]
-script = SubResource( 6 )
+script = SubResource( 15 )
 
 [node name="JumpTimer" type="Timer" parent="States/Idle"]
 
 [node name="Jump" type="Node" parent="States"]
 script = SubResource( 16 )
-jump_force = 300.0
+jump_height = 90.0
 movement_speed = 100.0
 
 [node name="FallRaycast" type="RayCast2D" parent="."]
@@ -239,6 +276,12 @@ editor/display_folded = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
 shape = SubResource( 17 )
 
+[node name="FollowingRange" type="Area2D" parent="."]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FollowingRange"]
+shape = SubResource( 18 )
+
 [node name="Entity" type="Node" parent="."]
 script = ExtResource( 6 )
 maximum_health = 15
@@ -250,5 +293,6 @@ script = ExtResource( 7 )
 loot_table = "crawler"
 [connection signal="timeout" from="States/Idle/JumpTimer" to="States/Idle" method="_on_Timer_timeout"]
 [connection signal="body_entered" from="DetectionRange" to="." method="on_body_detected"]
+[connection signal="body_exited" from="FollowingRange" to="." method="on_body_lost"]
 [connection signal="on_death" from="Entity" to="." method="on_death"]
 [connection signal="on_hurt" from="Entity" to="." method="on_hurt"]

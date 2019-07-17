@@ -187,6 +187,7 @@ position = Vector2( 984, 345 )
 position = Vector2( -24, 352 )
 
 [node name="Screen Boxes" type="Node2D" parent="."]
+visible = false
 position = Vector2( -144, -64 )
 
 [node name="Entrance" parent="Screen Boxes" instance=ExtResource( 8 )]
@@ -421,7 +422,7 @@ shape = SubResource( 14 )
 one_way_collision = true
 
 [node name="Stalachopper" parent="." instance=ExtResource( 15 )]
-position = Vector2( -1078, 624 )
+position = Vector2( -1078, 626 )
 
 [editable path="Screen Boxes/Entrance"]
 

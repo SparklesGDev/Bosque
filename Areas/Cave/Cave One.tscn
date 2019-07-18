@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Audio/Cave Ambient.ogg" type="AudioStream" id=1]
 [ext_resource path="res://Areas/Cave/Background Tileset.tres" type="TileSet" id=2]
@@ -10,11 +10,9 @@
 [ext_resource path="res://Objects/Screen Box.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Objects/Fire Trap/Fire Trap.tscn" type="PackedScene" id=9]
 [ext_resource path="res://Objects/Shortcuts/Scene Transition/Scene Transition.tscn" type="PackedScene" id=10]
-[ext_resource path="res://default_theme.tres" type="Theme" id=11]
-[ext_resource path="res://SWROMNS.TTF" type="DynamicFontData" id=12]
-[ext_resource path="res://Areas/Cave/Torch/Torch.tscn" type="PackedScene" id=13]
-[ext_resource path="res://Areas/Forest/Platform Tile.png" type="Texture" id=14]
-[ext_resource path="res://Areas/Cave/Enemies/Stalachopper/Stalachopper.tscn" type="PackedScene" id=15]
+[ext_resource path="res://Areas/Cave/Torch/Torch.tscn" type="PackedScene" id=11]
+[ext_resource path="res://Areas/Forest/Platform Tile.png" type="Texture" id=12]
+[ext_resource path="res://Areas/Cave/Enemies/Stalachopper/Stalachopper.tscn" type="PackedScene" id=13]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends Node
@@ -83,12 +81,7 @@ extents = Vector2( 480, 160 )
 [sub_resource type="RectangleShape2D" id=12]
 extents = Vector2( 296, 160 )
 
-[sub_resource type="DynamicFont" id=13]
-size = 32
-outline_size = 1
-font_data = ExtResource( 12 )
-
-[sub_resource type="RectangleShape2D" id=14]
+[sub_resource type="RectangleShape2D" id=13]
 extents = Vector2( 16, 4 )
 
 [node name="Cave One" type="Node2D"]
@@ -250,20 +243,7 @@ rotation = 6.28318
 position = Vector2( 8, 112 )
 target_scene = "res://Areas/Forest/Forest West.tscn"
 
-[node name="Label" type="Label" parent="."]
-light_mask = 0
-margin_left = -1200.0
-margin_top = 832.0
-margin_right = -960.0
-margin_bottom = 873.0
-theme = ExtResource( 11 )
-custom_fonts/font = SubResource( 13 )
-custom_colors/font_color = Color( 1, 0.462745, 0.462745, 1 )
-text = "Add Enemies!"
-align = 1
-valign = 1
-
-[node name="Torch" parent="." instance=ExtResource( 13 )]
+[node name="Torch" parent="." instance=ExtResource( 11 )]
 editor/display_folded = true
 visible = false
 position = Vector2( -1120, 848 )
@@ -271,15 +251,15 @@ position = Vector2( -1120, 848 )
 [node name="Light" parent="Torch" index="0"]
 shadow_buffer_size = 1024
 
-[node name="Torch2" parent="." instance=ExtResource( 13 )]
+[node name="Torch2" parent="." instance=ExtResource( 11 )]
 visible = false
 position = Vector2( -744, 632 )
 
-[node name="Torch3" parent="." instance=ExtResource( 13 )]
+[node name="Torch3" parent="." instance=ExtResource( 11 )]
 visible = false
 position = Vector2( -288, 480 )
 
-[node name="Torch4" parent="." instance=ExtResource( 13 )]
+[node name="Torch4" parent="." instance=ExtResource( 11 )]
 visible = false
 position = Vector2( 336, 464 )
 
@@ -298,12 +278,12 @@ margin_left = -16.0
 margin_top = -8.0
 margin_right = 16.0
 margin_bottom = 24.0
-texture = ExtResource( 14 )
+texture = ExtResource( 12 )
 axis_stretch_horizontal = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform"]
 position = Vector2( 0, -4 )
-shape = SubResource( 14 )
+shape = SubResource( 13 )
 one_way_collision = true
 
 [node name="Platform2" type="StaticBody2D" parent="." groups=[
@@ -321,12 +301,12 @@ margin_left = -16.0
 margin_top = -8.0
 margin_right = 16.0
 margin_bottom = 24.0
-texture = ExtResource( 14 )
+texture = ExtResource( 12 )
 axis_stretch_horizontal = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
 position = Vector2( 0, -4 )
-shape = SubResource( 14 )
+shape = SubResource( 13 )
 one_way_collision = true
 
 [node name="Platform3" type="StaticBody2D" parent="." groups=[
@@ -344,12 +324,12 @@ margin_left = -16.0
 margin_top = -8.0
 margin_right = 16.0
 margin_bottom = 24.0
-texture = ExtResource( 14 )
+texture = ExtResource( 12 )
 axis_stretch_horizontal = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
 position = Vector2( 0, -4 )
-shape = SubResource( 14 )
+shape = SubResource( 13 )
 one_way_collision = true
 
 [node name="Platform4" type="StaticBody2D" parent="." groups=[
@@ -367,12 +347,12 @@ margin_left = -16.0
 margin_top = -8.0
 margin_right = 16.0
 margin_bottom = 24.0
-texture = ExtResource( 14 )
+texture = ExtResource( 12 )
 axis_stretch_horizontal = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform4"]
 position = Vector2( 0, -4 )
-shape = SubResource( 14 )
+shape = SubResource( 13 )
 one_way_collision = true
 
 [node name="Platform5" type="StaticBody2D" parent="." groups=[
@@ -390,12 +370,12 @@ margin_left = -16.0
 margin_top = -8.0
 margin_right = 16.0
 margin_bottom = 24.0
-texture = ExtResource( 14 )
+texture = ExtResource( 12 )
 axis_stretch_horizontal = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform5"]
 position = Vector2( 0, -4 )
-shape = SubResource( 14 )
+shape = SubResource( 13 )
 one_way_collision = true
 
 [node name="Platform6" type="StaticBody2D" parent="." groups=[
@@ -413,16 +393,25 @@ margin_left = -16.0
 margin_top = -8.0
 margin_right = 16.0
 margin_bottom = 24.0
-texture = ExtResource( 14 )
+texture = ExtResource( 12 )
 axis_stretch_horizontal = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform6"]
 position = Vector2( 0, -4 )
-shape = SubResource( 14 )
+shape = SubResource( 13 )
 one_way_collision = true
 
-[node name="Stalachopper" parent="." instance=ExtResource( 15 )]
+[node name="Stalachopper" parent="." instance=ExtResource( 13 )]
 position = Vector2( -1078, 626 )
+
+[node name="Stalachopper2" parent="." instance=ExtResource( 13 )]
+position = Vector2( -1040, 626 )
+
+[node name="Stalachopper3" parent="." instance=ExtResource( 13 )]
+position = Vector2( -1152, 626 )
+
+[node name="Stalachopper4" parent="." instance=ExtResource( 13 )]
+position = Vector2( -1112, 626 )
 
 [editable path="Screen Boxes/Entrance"]
 

@@ -20,6 +20,7 @@ var is_upside_down = false
 func _ready():
 	entity = Entity.get_from_node(self)
 	change_state("idle_start")
+	for enemy in get_tree().get_nodes_in_group("Enemy"): add_collision_exception_with(enemy)
 
 func _physics_process(delta):
 	if entity.is_hurt: move_and_slide(entity.last_attack.direction * entity.hurtTime / entity.hurtDuration)
@@ -35,8 +36,8 @@ func change_state(state_name):
 	current_state = state
 
 func on_hurt(attack_data, new_health):
+	$AnimationPlayer.stop()
 	$AnimationPlayer.play("Hurt")
-	$AnimationPlayer.seek(0)
 	$"Hurt Sound".pitch_scale = rand_range(0.95, 1.05)
 	$"Hurt Sound".play()
 	pass

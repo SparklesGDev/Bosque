@@ -185,10 +185,11 @@ func start(host):
 func update(delta):
 	velocity = host.move_and_slide(velocity + Vector2(0, host.GRAVITY) * delta, Vector2.UP)
 	
-	# fix rotation cap
-	host.rotation_degrees += 180 * delta / jump_duration
-	
-	time = min(time + delta, jump_duration)
+	time += delta
+	if time < jump_duration: host.rotation_degrees += 180 * delta / jump_duration
+	else:
+		time = jump_duration
+		host.rotation_degrees = round(host.rotation_degrees / 180) * 180
 	
 	if time / jump_duration > 0.5:
 		if not host.is_upside_down: sprite.frame = 4 + round(time * 2 - 1)
@@ -211,7 +212,9 @@ radius = 108.0
 [sub_resource type="CircleShape2D" id=18]
 radius = 240.0
 
-[node name="Stalachopper" type="KinematicBody2D"]
+[node name="Stalachopper" type="KinematicBody2D" groups=[
+"Enemy",
+]]
 scale = Vector2( 1.5, 1.5 )
 script = ExtResource( 1 )
 
@@ -221,6 +224,7 @@ texture = ExtResource( 2 )
 vframes = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource( 3 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -264,7 +268,7 @@ script = SubResource( 15 )
 [node name="Jump" type="Node" parent="States"]
 script = SubResource( 16 )
 jump_height = 90.0
-movement_speed = 100.0
+movement_speed = 120.0
 
 [node name="FallRaycast" type="RayCast2D" parent="."]
 enabled = true
@@ -272,6 +276,7 @@ cast_to = Vector2( 0, 350 )
 
 [node name="DetectionRange" type="Area2D" parent="."]
 editor/display_folded = true
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionRange"]
 shape = SubResource( 17 )
